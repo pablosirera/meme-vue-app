@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from '@vue/reactivity'
-import HelloWorld from './components/HelloWorld.vue'
 import HeartIcon from './components/HeartIcon.vue'
 
 const memes = ref([])
@@ -17,6 +16,7 @@ loadData()
 
 <template>
   <h1>Meme Search</h1>
+  <input class="base-input" type="text" placeholder="Buscar meme" />
   <section class="container">
     <div v-for="meme in memes" :key="meme.id" class="card">
       <HeartIcon class="icon" />
@@ -27,6 +27,9 @@ loadData()
 </template>
 
 <style scoped>
+.base-input {
+  padding: 5px 8px;
+}
 .container {
   display: flex;
   flex-wrap: wrap;
