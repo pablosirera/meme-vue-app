@@ -3,6 +3,7 @@ import { ref } from '@vue/reactivity'
 import HeartIcon from './components/HeartIcon.vue'
 
 const memes = ref([])
+
 const loadData = async () => {
   const response = await fetch('https://api.imgflip.com/get_memes')
   const { data } = await response.json()
@@ -21,7 +22,7 @@ loadData()
     <div v-for="meme in memes" :key="meme.id" class="card">
       <HeartIcon class="icon" />
       <img :src="meme.url" />
-      {{ meme.name }}
+      <p>{{ meme.name }}</p>
     </div>
   </section>
 </template>
@@ -52,11 +53,11 @@ loadData()
   right: 15px;
   cursor: pointer;
 }
+.card .icon.selected {
+  color: red;
+}
 .card .icon:hover {
   opacity: 0.75;
-}
-.card .icon.fav {
-  color: red;
 }
 .card img {
   width: 180px;
