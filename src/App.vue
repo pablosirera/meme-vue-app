@@ -1,8 +1,11 @@
 <script setup>
-import { ref } from '@vue/reactivity'
+import { ref } from 'vue'
 import HeartIcon from './components/HeartIcon.vue'
+import BaseCard from './components/BaseCard.vue'
 
 const memes = ref([])
+const favs = ref([])
+let allMemes = []
 
 const loadData = async () => {
   const response = await fetch('https://api.imgflip.com/get_memes')
@@ -10,6 +13,23 @@ const loadData = async () => {
 
   console.log(data.memes)
   memes.value = data.memes
+  allMemes = data.memes
+}
+
+const searchMeme = event => {
+  const value = event.target.value
+  memes.value = allMemes.filter(meme =>
+    meme.name.toLowerCase().includes(value.toLowerCase()),
+  )
+}
+
+const toggleFav = memeId => {
+  const index = favs.value.indexOf(memeId)
+  if (index > -1) {
+    favs.value.splice(index, 1)
+  } else {
+    favs.value.push(memeId)
+  }
 }
 
 loadData()
@@ -17,13 +37,26 @@ loadData()
 
 <template>
   <h1>Meme Search</h1>
-  <input class="base-input" type="text" placeholder="Buscar meme" />
+
+  <input
+    class="input input-bordered w-full max-w-xs"
+    type="text"
+    placeholder="Buscar meme"
+    @input="searchMeme"
+  />
+
   <section class="container">
-    <div v-for="meme in memes" :key="meme.id" class="card">
-      <HeartIcon class="icon" />
+    <BaseCard v-for="meme in memes" :key="meme.id" :meme="meme" />
+
+    <!-- <div v-for="meme in memes" :key="meme.id" class="card">
+      <HeartIcon
+        class="icon"
+        :class="{ selected: favs.includes(meme.id) }"
+        @click="toggleFav(meme.id)"
+      />
       <img :src="meme.url" />
       <p>{{ meme.name }}</p>
-    </div>
+    </div> -->
   </section>
 </template>
 
